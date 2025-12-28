@@ -4,6 +4,7 @@ import Image from "next/image";
 import Scanqr from "./components/Scanqr";
 import { useEffect, useState } from 'react';
 import UPIPayment from "./components/Upi";
+import History from "./components/History"
 
 export default function Home() {
   const [result, setResult] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export default function Home() {
 
   return (
   
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 gap-6">
+    <main className="h-auto w-full flex flex-col items-center justify-center p-4 gap-6">
       <h1 className="text-xl font-semibold">S Pay</h1>
 
       {!result && (
@@ -46,7 +47,7 @@ export default function Home() {
           <p className="font-mono break-all">{result}</p>
 
           <button
-            onClick={() => setResult(null)}
+            onClick={() => window.location.reload() }
             className="mt-4 px-4 py-2 rounded-lg border"
           >
             Scan again
@@ -54,9 +55,15 @@ export default function Home() {
         </div>
       )}
 
-      <div className="min-h-screen flex items-centre justify-centre p-4">
+      <div className=" flex items-centre justify-centre p-4">
       <UPIPayment vpa={vpa} name={name} marchantCode={marchantCode} />
     </div>
+
+    <div className=" flex w-full ">
+       
+    <History/>
+    </div>
+
 
 
 

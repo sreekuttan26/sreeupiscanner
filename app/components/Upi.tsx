@@ -107,8 +107,12 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
             category: category,
             subcategory: sub_category,
             createdAt: serverTimestamp(),
-            status: 'initiated',
+            
         });
+        setAmount('');
+        setNote('');
+        setCategory('Essentials')
+        setsub_Category('Select')
 
     }
 
@@ -132,8 +136,8 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
     const handleProceed = () => {
         //console.log(getDocData_budget)
-        if (!amount || Number(amount) <= 0 || vpa.trim() === '') {
-            alert('Please enter a valid amount.');
+        if (!amount || Number(amount) <= 0 || vpa.trim() === '' || sub_category!="Select") {
+            alert('Please enter valid info.');
             return;
         }
        // addToFirebase();
