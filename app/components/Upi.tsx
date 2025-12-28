@@ -79,7 +79,7 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
         onClick={handleProceed}
         className="w-full rounded-lg bg-black text-white py-2"
       >
-        Pay via UPI
+        Pay Now
       </button>
 
       {showApps && (
@@ -88,7 +88,11 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
             Choose a UPI app
           </p>
 
-          {UPI_APPS.map((app) => (
+          <a href={buildUPIUrl('upi://pay')}>
+            Choose UPI app
+          </a>
+
+          {/* {UPI_APPS.map((app) => (
             <a
               key={app.name}
               href={buildUPIUrl(app.scheme)}
@@ -96,7 +100,7 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
             >
               {app.name}
             </a>
-          ))}
+          ))} */}
         </div>
       )}
     </div>
