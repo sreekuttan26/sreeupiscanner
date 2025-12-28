@@ -186,11 +186,6 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
                         </div>
                     ))}
 
-
-
-
-
-
                 </div>
             </div>
 
@@ -199,6 +194,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
 
             }} value={sub_category}>
+                <option value="Select">Select</option>
 
 
 
