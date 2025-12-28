@@ -136,7 +136,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
     const handleProceed = () => {
         //console.log(getDocData_budget)
-        if (!amount || Number(amount) <= 0 || vpa.trim() === '' || sub_category!="Select") {
+        if (!amount || Number(amount) <= 0 || vpa.trim() === '' || sub_category==="Select") {
             alert('Please enter valid info.');
             return;
         }
