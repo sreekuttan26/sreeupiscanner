@@ -113,6 +113,8 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
         setNote('');
         setCategory('Essentials')
         setsub_Category('Select')
+         window.location.reload() 
+        
 
     }
 
