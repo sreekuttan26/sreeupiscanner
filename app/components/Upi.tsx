@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { collection, addDoc, serverTimestamp, getDoc, doc, getDocs } from 'firebase/firestore';
 import { firestore } from './Firebase';
+import { Save } from 'lucide-react';
 
 type UPIProps = {
     vpa: string;
@@ -35,6 +36,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
     const [amount, setAmount] = useState('');
     const [note, setNote] = useState('');
     const [showApps, setShowApps] = useState(false);
+    const [showRecord, setShowrecord] = useState(false);
     const [category, setCategory] = useState<Category>('Essentials');
     const [sub_category, setsub_Category] = useState('Select');
     const [budget, setBudget] = useState<(Record<string, number>)>({});
@@ -98,12 +100,12 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
     const addToFirebase = async () => {
         await addDoc(collection(firestore, 'expenses'), {
             amount: Number(amount),
-            vpa:vpa,
-            name:name,
-            marchantCode:marchantCode,
+            vpa: vpa,
+            name: name,
+            marchantCode: marchantCode,
             note: note,
             category: category,
-            subcategory:sub_category,
+            subcategory: sub_category,
             createdAt: serverTimestamp(),
             status: 'initiated',
         });
@@ -134,7 +136,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
             alert('Please enter a valid amount.');
             return;
         }
-        addToFirebase();
+       // addToFirebase();
 
         setShowApps(true);
     };
@@ -168,8 +170,8 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
                         <div
                             key={cat}
                             className={`p-2 border-2 shadow-xl rounded-xl flex justify-between flex-col text-sm items-center ${category === cat
-                                ? "border-black bg-black text-white"
-                                : "border-gray-50 bg-gray-200 text-black"
+                                ? "border-white bg-black text-white"
+                                : "  text-gray-500 border-black"
                                 }`}
                             onClick={() => setCategory(cat as Category)}
                         >
@@ -190,8 +192,8 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
             <select className="w-full rounded-lg border px-4 py-2" onChange={(e) => {
                 setsub_Category(e.target.value)
-                
-                
+
+
             }} value={sub_category}>
 
 
@@ -205,7 +207,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
             <button
                 onClick={handleProceed}
-                className="w-full rounded-lg bg-black text-white py-2"
+                className="w-full rounded-lg bg-black text-white py-2 border-2 border-gray-200"
             >
                 Pay Now
             </button>
@@ -221,15 +223,17 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
                         Choose UPI app
                     </a>
 
-                    {/* {UPI_APPS.map((app) => (
-            <a
-              key={app.name}
-              href={buildUPIUrl(app.scheme)}
-              className="w-full text-centre border rounded-lg py-2"
-            >
-              {app.name}
-            </a>
-          ))} */}
+                    <div>
+                        <button
+                            onClick={()=>{addToFirebase()}}
+                            className="w-full rounded-lg bg-black text-white py-2 border-2 border-gray-200 flex items-center justify-center"
+                        >
+                           <Save /> Record 
+                        </button>
+
+                    </div>
+
+
                 </div>
             )}
         </div>
