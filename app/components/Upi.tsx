@@ -32,7 +32,7 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [showApps, setShowApps] = useState(false);
-  const[category,setCategory]=useState('');
+  const[category,setCategory]=useState('Essentials');
 
   const getDocData_exp = async (docId: string) => {
     const docRef = doc(firestore, 'expenses', docId);
@@ -52,7 +52,7 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
       note,
       category,
       createdAt: serverTimestamp(),
-      status: 'initiated_',
+      status: 'initiated',
     });
 
   }
@@ -68,16 +68,17 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
       tn: note,
     });
 
-    addToFirebase()
+   
 
     return `${scheme}?${params.toString()}`;
   };
 
   const handleProceed = () => {
-    if (!amount || Number(amount) <= 0) {
+    if (!amount || Number(amount) <= 0 || vpa.trim() === '') {
       alert('Please enter a valid amount.');
       return;
     }
+     addToFirebase();
 
     setShowApps(true);
   };
