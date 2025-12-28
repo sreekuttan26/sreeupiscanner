@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { collection, addDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDoc, doc } from 'firebase/firestore';
 import {firestore} from './Firebase';
 
 type UPIProps = {
@@ -33,6 +33,18 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
   const [note, setNote] = useState('');
   const [showApps, setShowApps] = useState(false);
   const[category,setCategory]=useState('');
+
+  const getDocData_exp = async (docId: string) => {
+    const docRef = doc(firestore, 'expenses', docId);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? docSnap.data() : null;
+  }
+
+  const getDocData_budget = async (docId: string) => {
+    const docRef = doc(firestore, 'budgets', docId);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? docSnap.data() : null;
+  }
 
   const addToFirebase = async () => {
     await addDoc(collection(firestore, 'expenses'), {
