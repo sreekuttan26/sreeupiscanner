@@ -68,6 +68,11 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
         fetchData();
     }, []);
+    useEffect(() => {
+  if (vpa) {
+    Setvpa(vpa);
+  }
+}, [vpa]);
 
 
 
