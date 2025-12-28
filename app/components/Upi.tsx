@@ -52,7 +52,7 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
       note,
       category,
       createdAt: serverTimestamp(),
-      status: 'initiated',
+      status: 'initiated_',
     });
 
   }
