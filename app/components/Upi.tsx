@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { collection, addDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import {firestore} from './Firebase';
 
 type UPIProps = {
     vpa: string;
@@ -30,6 +32,18 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [showApps, setShowApps] = useState(false);
+  const[category,setCategory]=useState('');
+
+  const addToFirebase = async () => {
+    await addDoc(collection(firestore, 'expenses'), {
+      amount: Number(amount),
+      note,
+      category,
+      createdAt: serverTimestamp(),
+      status: 'initiated',
+    });
+
+  }
 
   const buildUPIUrl = (scheme: string) => {
     const params = new URLSearchParams({
@@ -41,6 +55,8 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
       cu: 'INR',
       tn: note,
     });
+
+    addToFirebase()
 
     return `${scheme}?${params.toString()}`;
   };
@@ -75,6 +91,15 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
         className="w-full rounded-lg border px-4 py-2"
       />
 
+      <select className="w-full rounded-lg border px-4 py-2" onChange={(e) => {
+        setCategory(e.target.value);
+        }}>
+        <option value="Essentials">Essentials</option>
+        <option value="Needs">Needs</option>
+        <option value="Fun">Fun</option>
+        <option value="Future">Future</option>
+      </select>
+
       <button
         onClick={handleProceed}
         className="w-full rounded-lg bg-black text-white py-2"
@@ -88,7 +113,8 @@ export default function UPIPayment({vpa, name, marchantCode}: UPIProps) {
             Choose a UPI app
           </p>
 
-          <a href={buildUPIUrl('upi://pay')}>
+          <a href={buildUPIUrl('upi://pay')}
+          className="w-full text-centre border rounded-lg py-2">
             Choose UPI app
           </a>
 
