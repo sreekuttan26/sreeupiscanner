@@ -91,7 +91,7 @@ const History = () => {
                         <div className="flex flex-col gap-2">
 
                             <span>{exp.data.name}</span>
-                            <span className="text-gray-600">{exp.data.note}</span>
+                            <span className="text-gray-200">{exp.data.note}</span>
                             <span className="p-2 border-2 rounded-md bg-black text-white">{format(exp.data.createdAt.toDate(), "EEEE, dd MMM yyyy | hh:mm a")}</span>
                         </div>
                         <span className="px-2 font-semibold text-xl">₹ {exp.data.amount}</span>
