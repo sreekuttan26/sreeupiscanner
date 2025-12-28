@@ -104,8 +104,8 @@ const History = () => {
                     </div>
                 ))}
             </div>
-            {isdeletewindow&&<div className="absolute top-0 left-0 flex w-full h-[200vh] z-10   items-center justify-center px-8 ">
-                <div className="absolute top-0 left-0 flex w-full h-[200vh] z-1   items-center justify-center px-8 opacity-25  bg-black"></div>
+            {isdeletewindow&&<div className="absolute top-0 left-0 flex w-full h-[200vh] z-10   items-center justify-center px-8 text-black">
+                <div className="absolute top-0 left-0 flex w-full h-[200vh] z-1   items-center justify-center px-8 opacity-50  bg-gray-300"></div>
                 <div className="w-full p-4 border-2 flex flex-col gap-2 rounded-xl items-center bg-white z-9">
                     <h1 className="text-xl font-semibold py-2">Delete</h1>
                     <p>Do you want to delete this?</p>

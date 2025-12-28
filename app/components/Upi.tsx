@@ -40,6 +40,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
     const [category, setCategory] = useState<Category>('Essentials');
     const [sub_category, setsub_Category] = useState('Select');
     const [budget, setBudget] = useState<(Record<string, number>)>({});
+    const [Lvpa, Setvpa]=useState(vpa)
 
     const categories = {
         'Essentials': ["Rent", "Grossary"]
@@ -100,7 +101,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
     const addToFirebase = async () => {
         await addDoc(collection(firestore, 'expenses'), {
             amount: Number(amount),
-            vpa: vpa,
+            vpa: Lvpa,
             name: name,
             marchantCode: marchantCode,
             note: note,
@@ -120,7 +121,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
     const buildUPIUrl = (scheme: string) => {
         const params = new URLSearchParams({
-            pa: vpa,
+            pa: Lvpa,
             pn: name,
             mc: marchantCode,
             tr: Date.now().toString(),
@@ -138,7 +139,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
     const handleProceed = () => {
         //console.log(getDocData_budget)
-        if (!amount || Number(amount) <= 0 || vpa.trim() === '' || sub_category==="Select") {
+        if (!amount || Number(amount) <= 0 || Lvpa.trim() === '' || sub_category==="Select") {
             alert('Please enter valid info.');
             return;
         }
@@ -150,7 +151,15 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
     return (
         <div className="w-full max-w-sm mx-auto flex flex-col gap-4">
             <p>paying to {name}</p>
-            <p>VPA: {vpa}</p>
+            <p>VPA: {Lvpa}</p>
+            <input
+                type="text"
+               
+                placeholder="VPA"
+                value={Lvpa}
+                onChange={(e) => Setvpa(e.target.value)}
+                className="w-full rounded-lg border px-4 py-2"
+            />
             <input
                 type="number"
                 inputMode="decimal"
