@@ -51,6 +51,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
     type Category = keyof typeof categories;
 
     useEffect(() => {
+        Setvpa(vpa)
         const fetchData = async () => {
             const data = await getdoc(); // wait for the promise to resolve
             console.log(data);
