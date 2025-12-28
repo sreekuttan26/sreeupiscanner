@@ -152,6 +152,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
        // addToFirebase();
 
         setShowApps(true);
+        window.location.href = buildUPIUrl('upi://pay');
     };
 
     return (
@@ -231,14 +232,14 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
             {showApps && (
                 <div className="flex flex-col gap-2 pt-2">
-                    <p className="text-sm text-gray-600 text-centre">
+                    {/* <p className="text-sm text-gray-600 text-centre">
                         Choose a UPI app
-                    </p>
+                    </p> */}
 
-                    <a href={buildUPIUrl('upi://pay')}
+                    {/* <a href={buildUPIUrl('upi://pay')}
                         className="w-full text-centre border rounded-lg py-2">
                         Choose UPI app
-                    </a>
+                    </a> */}
 
                     <div>
                         <button
