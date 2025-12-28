@@ -30,14 +30,22 @@ const UPI_APPS: UPIApp[] = [
 
 type BudgetCategories = Record<string, number>;
 
+
 export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
     const [amount, setAmount] = useState('');
     const [note, setNote] = useState('');
     const [showApps, setShowApps] = useState(false);
-    const [category, setCategory] = useState('Essentials');
-    const [budget, setBudget] = useState<( Record<string, number>)>({} );
+    const [category, setCategory] = useState<Category>('Essentials');
+    const [sub_category, setsub_Category] = useState('Select');
+    const [budget, setBudget] = useState<(Record<string, number>)>({});
 
-    const categories = ['Essentials', 'Needs', 'Fun', 'Future'];
+    const categories = {
+        'Essentials': ["Rent", "Grossary"]
+        , 'Needs': ["cloths", "shoe"],
+        'Fun': ["Netflix", "prime"],
+        'Future': ["sip", "stocks", "fd"]
+    } as const;
+    type Category = keyof typeof categories;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -50,7 +58,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
             if (jandata) {
                 setBudget(jandata.categories);
-                
+
             }
         };
 
@@ -90,8 +98,12 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
     const addToFirebase = async () => {
         await addDoc(collection(firestore, 'expenses'), {
             amount: Number(amount),
-            note,
-            category,
+            vpa:vpa,
+            name:name,
+            marchantCode:marchantCode,
+            note: note,
+            category: category,
+            subcategory:sub_category,
             createdAt: serverTimestamp(),
             status: 'initiated',
         });
@@ -150,23 +162,41 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
             <div>
                 <p>Budget Info:</p>
                 <div className="flex gap-2 justify-center">
-                    {categories.map((cat)=>(
-                        <div key={cat} className={`p-2 border-2 shadow-xl rounded-xl flex justify-between flex-col text-sm items-center ${category===cat?"border-black bg-black text-white ":"border-gray-50 bg-gray-200 text-black "}`} onClick={()=>{setCategory(cat)}}>
-                            <h1 className='text-md font-semibold'>{cat}</h1>
-                            <p >₹{budget[cat] || 0}</p>
-                            <p >Balance</p>
+
+
+                    {Object.entries(categories).map(([cat, items]) => (
+                        <div
+                            key={cat}
+                            className={`p-2 border-2 shadow-xl rounded-xl flex justify-between flex-col text-sm items-center ${category === cat
+                                ? "border-black bg-black text-white"
+                                : "border-gray-50 bg-gray-200 text-black"
+                                }`}
+                            onClick={() => setCategory(cat as Category)}
+                        >
+                            <h1 className="text-md font-semibold">{cat}</h1>
+                            <p>₹{budget?.[cat] || 0}</p>
+                            <p>Balance</p>
                             <p className="text-lg font-black">0</p>
-
                         </div>
-
                     ))}
+
+
+
+
+
+
                 </div>
             </div>
 
             <select className="w-full rounded-lg border px-4 py-2" onChange={(e) => {
-                setCategory(e.target.value);
-            }} value={category}>
-                {categories.map((cat) => (
+                setsub_Category(e.target.value)
+                
+                
+            }} value={sub_category}>
+
+
+
+                {categories[category]?.map((cat) => (
                     <option key={cat} value={cat}>
                         {cat}
                     </option>
