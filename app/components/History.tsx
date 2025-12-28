@@ -64,6 +64,10 @@ const History = () => {
     const deletecnf=async()=>{
           await deleteDoc(doc(firestore, "expenses", deletedocid));
         setchange(!change)
+        setdeletedocid('')
+         enableScroll();
+         Setisdeletewindow(false)
+
     }
 
     const deletcancel=async()=>{
