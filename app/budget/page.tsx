@@ -2,6 +2,7 @@
 import { addDoc, collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
 import { firestore } from '../components/Firebase';
+import { ArrowLeft } from 'lucide-react';
 
 export default function budget() {
 
@@ -15,7 +16,7 @@ export default function budget() {
         const month = now.getMonth() + 1;
         const year = now.getFullYear();
 
-        if(essentail<0 || needs<0 || fun <0 || future<0){
+        if (essentail < 0 || needs < 0 || fun < 0 || future < 0) {
             alert("Enter valid amount")
             return;
         }
@@ -43,6 +44,10 @@ export default function budget() {
     return (
         <main className="h-auto w-full  flex flex-col items-center justify-center p-4 gap-6">
             <div className="max-w-sm flex flex-col gap-2 mt-5">
+                <div onClick={() => { window.location.href = '/' }} className="flex flex-row w-full">
+                    <ArrowLeft />
+
+                </div>
                 <h1 className="font-semibold text-lg ">Add Budget</h1>
 
                 {/* input essential */}

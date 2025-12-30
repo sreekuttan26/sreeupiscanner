@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import UPIPayment from "./components/Upi";
 import History from "./components/History"
 import Handleupi from "./components/Handleupi";
+import { Settings } from "lucide-react";
 
 export default function Home() {
   const [result, setResult] = useState<string | null>(null);
@@ -36,6 +37,10 @@ export default function Home() {
   return (
   
     <main className="h-auto w-full flex flex-col items-center justify-center p-4 gap-6">
+      <div onClick={()=>{window.location.href='/budget'}} className="flex flex-row-reverse w-full">
+        <Settings />
+      </div>
+      
       <h1 className="text-xl font-semibold">S Pay</h1>
 
       {!result && (
