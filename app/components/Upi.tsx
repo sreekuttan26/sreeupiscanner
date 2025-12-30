@@ -149,7 +149,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
             alert('Please enter valid info.');
             return;
         }
-       // addToFirebase();
+        addToFirebase();
 
         setShowApps(true);
         window.location.href = buildUPIUrl('upi://pay');
@@ -241,7 +241,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
                         Choose UPI app
                     </a> */}
 
-                    <div>
+                    {/* <div>
                         <button
                             onClick={()=>{addToFirebase()}}
                             className="w-full rounded-lg bg-black text-white py-2 border-2 border-gray-200 flex items-center justify-center"
@@ -249,7 +249,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
                            <Save /> Record 
                         </button>
 
-                    </div>
+                    </div> */}
 
 
                 </div>
