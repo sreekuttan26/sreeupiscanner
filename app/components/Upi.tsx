@@ -13,6 +13,34 @@ type UPIProps = {
 
 };
 
+type Transaction = {
+    amount: number;
+    category: string;
+    createdAt: any; // Firestore Timestamp
+    marchantCode: string;
+    name: string;
+    note: string;
+    subcategory: string;
+    vpa: string;
+};
+type Expense = {
+    id: string,
+    data: Transaction
+}
+
+type Budgetitems = {
+    Essentials: number,
+    Needs: number,
+    Fun: number,
+    Future: number,
+}
+
+type Budget = {
+    id: string,
+    data: Budgetitems
+
+}
+
 const PAYEE_VPA = '17157114001337@cnrb';
 const PAYEE_NAME = 'THE INDIAN SOCIETY FOR ECOLOGICAL ECONOM';
 const MERCHANT_CODE = '8641';
@@ -40,15 +68,75 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
     const [category, setCategory] = useState<Category>('Essentials');
     const [sub_category, setsub_Category] = useState('Select');
     const [budget, setBudget] = useState<(Record<string, number>)>({});
-    const [Lvpa, Setvpa]=useState(vpa)
+    const [budget_now, setBudget_now] = useState<(Budget[])>([]);
+    const [Lvpa, Setvpa] = useState(vpa)
+    const [allexp, Setallexp] = useState<Expense[]>();
+
+    const [Essentials_bal, Setessential_bal] = useState(0)
+    const [Need_bal, Setneed_bal] = useState(0)
+    const [Fun, Setfun_bal] = useState(0)
+    const [Future, Sefuture_bal] = useState(0)
 
     const categories = {
-        'Essentials': ["Rent", "Grossary"]
-        , 'Needs': ["cloths", "shoe"],
-        'Fun': ["Netflix", "prime"],
-        'Future': ["sip", "stocks", "fd"]
+        "Essentials": [
+            "Rent",
+            "Grocery",
+            "Electricity Bill",
+            "Water",
+            "Internet",
+            "Mobile Recharge",
+            "Gas",
+            "Petrol",
+            "Taxi",
+            "Bike maintenance"
+        ],
+        "Needs": [
+            "Clothes",
+            "Shoes",
+            "Personal Care",
+            "Medicines",
+            "Home Decor",
+            "Repairs",
+            "Haircut"
+        ],
+        "Fun": [
+            "Netflix",
+            "Prime",
+            "Spotify",
+            "Dining Out",
+            "Movies",
+            "Games",
+            "Fun Travel",
+            "Hobbies",
+            "Stay Out"
+        ],
+        "Future": [
+            "SIP",
+            "Stocks",
+            "FD",
+            "Emergency Fund",
+            "Insurance",
+            "Retirement Savings",
+            "Education Fund",
+            "Debt"
+        ]
     } as const;
     type Category = keyof typeof categories;
+
+
+    useEffect(() => {
+        let totalSpent = 0;
+
+        allexp?.forEach((exp) => {
+            if (exp.data.category === "Needs") {
+                totalSpent += exp.data.amount;
+            }
+        });
+
+        const remaining = (budget_now[0]?.data.Needs ?? 0) - totalSpent;
+        Setneed_bal(remaining);
+    }, [allexp, budget_now]);
+
 
     useEffect(() => {
         Setvpa(vpa)
@@ -69,27 +157,97 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
         fetchData();
     }, []);
     useEffect(() => {
-  if (vpa) {
-    Setvpa(vpa);
-  }
-}, [vpa]);
+        if (vpa) {
+            Setvpa(vpa);
+        }
+    }, [vpa]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+
+            await get_budget()
+            await get_expenses()
+
+        };
+        fetchData();
+
+        // const trasaction:Transaction[] =allexp;
+
+
+        console.log(allexp)
+
+    }, [])
+
+    useEffect(() => {
+
+    }, [budget_now]);
 
 
 
 
 
-    const getDocData_exp = async (docId: string) => {
-        const docRef = doc(firestore, 'expenses', docId);
-        const docSnap = await getDoc(docRef);
-        return docSnap.exists() ? docSnap.data() : null;
+    // const getDocData_exp = async (docId: string) => {
+    //     const docRef = doc(firestore, 'expenses', docId);
+    //     const snapshot = await getDoc(docRef);
+    //     snapshot.docs.map((docSnap) => ({
+    //         id: docSnap.id,
+    //         data: docSnap.data() as Transaction
+    //     }))
+
+
+
+
+    //     return docSnap.exists() ? docSnap.data() : null;
+    // }
+
+    const get_budget = async () => {
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+
+        const budgetData: Budget[] = [];
+        const doc_location = `${month}_${year}`
+        const collectionRef = collection(firestore, String(year), doc_location, "budget");
+        const collectionSnap = await getDocs(collectionRef);
+
+        collectionSnap.forEach((doc) => {
+
+            budgetData.push({
+                id: doc.id,
+                data: doc.data() as Budgetitems
+            });
+        })
+
+        setBudget_now(budgetData)
+
+
     }
 
-    const getDocData_budget = async (docId: string) => {
-        const docRef = doc(firestore, 'budget', docId);
-        const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) return null;
+    const get_expenses = async () => {
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+        const doc_location = `${month}_${year}`
+        const collectionRef = collection(firestore, String(year), doc_location, "expenses");
 
-        return docSnap.data() as BudgetCategories;
+        const collectionsnap = await getDocs(collectionRef)
+
+        const tempExp: Expense[] = []
+
+        collectionsnap.forEach(doc => {
+            tempExp.push({
+                id: doc.id,
+                data: doc.data() as Transaction
+            })
+
+
+        })
+        Setallexp(tempExp)
+
+
+
+
+
 
     }
 
@@ -105,7 +263,11 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
 
     const addToFirebase = async () => {
-        await addDoc(collection(firestore, 'expenses'), {
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+
+        await addDoc(collection(firestore, String(year), `${month}_${year}`, "expenses"), {
             amount: Number(amount),
             vpa: Lvpa,
             name: name,
@@ -114,14 +276,14 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
             category: category,
             subcategory: sub_category,
             createdAt: serverTimestamp(),
-            
+
         });
         setAmount('');
         setNote('');
         setCategory('Essentials')
         setsub_Category('Select')
-         window.location.reload() 
-        
+        window.location.reload()
+
 
     }
 
@@ -145,7 +307,8 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
 
     const handleProceed = () => {
         //console.log(getDocData_budget)
-        if (!amount || Number(amount) <= 0 || Lvpa.trim() === '' || sub_category==="Select") {
+
+        if (!amount || Number(amount) <= 0 || Lvpa.trim() === '' || sub_category === "Select") {
             alert('Please enter valid info.');
             return;
         }
@@ -161,7 +324,7 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
             <p>VPA: {Lvpa}</p>
             <input
                 type="text"
-               
+
                 placeholder="VPA"
                 value={Lvpa}
                 onChange={(e) => Setvpa(e.target.value)}
@@ -198,9 +361,9 @@ export default function UPIPayment({ vpa, name, marchantCode }: UPIProps) {
                             onClick={() => setCategory(cat as Category)}
                         >
                             <h1 className="text-md font-semibold">{cat}</h1>
-                            <p>₹{budget?.[cat] || 0}</p>
+                            <p>₹{budget_now[0]?.data[cat as keyof Budgetitems] || 0}</p>
                             <p>Balance</p>
-                            <p className="text-lg font-black">0</p>
+                            <p className="text-lg font-black">{Need_bal}</p>
                         </div>
                     ))}
 

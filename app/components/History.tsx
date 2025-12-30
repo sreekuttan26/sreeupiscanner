@@ -42,7 +42,12 @@ const History = () => {
     }, [change]);
 
     const getdoc = async () => {
-        const snapshot = await getDocs(collection(firestore, 'expenses'));
+        const now=new Date();
+        const month=now.getMonth()+1;
+        const year=now.getFullYear();
+
+        console.log(month+"::"+year)
+        const snapshot = await getDocs(collection(firestore, String(year),`${month}_${year}`, 'expenses'));
 
         return snapshot.docs.map((docSnap) => ({
             id: docSnap.id,

@@ -5,6 +5,7 @@ import Scanqr from "./components/Scanqr";
 import { useEffect, useState } from 'react';
 import UPIPayment from "./components/Upi";
 import History from "./components/History"
+import Handleupi from "./components/Handleupi";
 
 export default function Home() {
   const [result, setResult] = useState<string | null>(null);
@@ -55,14 +56,17 @@ export default function Home() {
         </div>
       )}
 
-      <div className=" flex items-centre justify-centre p-4">
+      <div className=" flex items-centre justify-centre p-4 hidden">
       <UPIPayment vpa={vpa} name={name} marchantCode={marchantCode} />
     </div>
+     <Handleupi vpa={vpa} name={name} marchantCode={marchantCode} />
 
     <div className=" flex w-full ">
        
     <History/>
     </div>
+
+    
 
 
 
