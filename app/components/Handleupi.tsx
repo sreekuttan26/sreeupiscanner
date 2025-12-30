@@ -260,7 +260,7 @@ const Handleupi = ({ vpa, name, marchantCode }: UPIProps) => {
 
 
     return (
-        <div className="flex flex-col gap-2 w-sm">
+        <div className="flex flex-col gap-2 max-w-sm max-auto">
             <p>Paying to: {name}</p>
             <p>VPA: {C_vpa} </p>
 
