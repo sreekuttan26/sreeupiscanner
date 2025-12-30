@@ -198,9 +198,9 @@ const Handleupi = ({ vpa, name, marchantCode }: UPIProps) => {
     }, [budget, expenses, expincats])
 
     useEffect(() => {
-        console.log("bal: " + balincats.Essentials)
+       SetCvpa(vpa)
 
-    }, [balincats])
+    }, [vpa])
 
 
 
