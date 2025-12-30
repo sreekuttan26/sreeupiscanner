@@ -67,7 +67,10 @@ const History = () => {
 
     }
     const deletecnf=async()=>{
-          await deleteDoc(doc(firestore, "expenses", deletedocid));
+        const now=new Date();
+        const month=now.getMonth()+1;
+        const year=now.getFullYear();
+          await deleteDoc(doc(firestore, String(year),`${month}_${year}`, 'expenses', deletedocid));
         setchange(!change)
         setdeletedocid('')
          enableScroll();

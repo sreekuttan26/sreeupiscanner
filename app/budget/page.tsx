@@ -29,6 +29,7 @@ export default function budget() {
                 Fun: fun,
                 Future: future
             })
+            window.location.href="/"
 
         } catch (error) {
             console.log(error)
